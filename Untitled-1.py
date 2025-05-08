@@ -213,10 +213,8 @@ def a_star_solve(start_state):
 # --- Automatically select algorithm ---
 def choose_algorithm(tube_colors):
     # If the puzzle seems small, BFS can solve it faster
-    # You can choose this threshold based on the number of filled tubes or other logic.
-    # For simplicity, we'll choose BFS if the initial state is already small
     total_colors = sum(len(tube) for tube in tube_colors)
-    if total_colors < 16:  # You can adjust this threshold
+    if total_colors < 16:
         return bfs_solve
     else:
         return a_star_solve
@@ -235,7 +233,7 @@ while run:
         auto_solve = False
         move_index = 0
 
-        # Select the solving algorithm based on the state of the game
+        # Default solving algorithm
         solve_algorithm = choose_algorithm(tube_colors)
         print(f"Selected algorithm: {solve_algorithm.__name__}")
 
@@ -270,6 +268,14 @@ while run:
                     auto_solve = True
                     move_index = 0
                     auto_timer = 0
+            elif event.key == pygame.K_b:
+                # Select BFS if 'B' is pressed
+                solve_algorithm = bfs_solve
+                print("BFS selected")
+            elif event.key == pygame.K_a:
+                # Select A* if 'A' is pressed
+                solve_algorithm = a_star_solve
+                print("A* selected")
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if not selected:
@@ -292,6 +298,11 @@ while run:
     restart_text = font.render('Space: Restart | Enter: New | S: Solve', True, 'white')
     screen.blit(restart_text, (10, 10))
 
+    # Display selected algorithm info
+    algorithm_text = font.render(f'Selected Algorithm: {"BFS" if solve_algorithm == bfs_solve else "A*"}', True, 'white')
+    screen.blit(algorithm_text, (10, 40))
+
     pygame.display.flip()
 
 pygame.quit()
+
